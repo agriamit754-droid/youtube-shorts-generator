@@ -1,72 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Shorts Generator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShortsAI - Video Generator</title>
 
-    <style>
-        body {
-            background: #10101c;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 30px 15px;
-        }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        .container {
-            max-width: 500px;
-            margin: 70px auto;
-            background: #1c1c30;
-            padding: 30px;
-            border-radius: 20px;
-        }
+body {
+    margin: 0;
+    background: #090914;
+    color: white;
+    font-family: Arial, sans-serif;
+}
 
-        h1 {
-            color: #a78bfa;
-        }
+header {
+    padding: 22px;
+    border-bottom: 1px solid #292943;
+    font-size: 23px;
+    font-weight: bold;
+    color: #a78bfa;
+}
 
-        input {
-            width: 90%;
-            padding: 15px;
-            border-radius: 10px;
-            border: none;
-            margin: 15px 0;
-        }
+.container {
+    max-width: 650px;
+    margin: 65px auto;
+    padding: 25px;
+}
 
-        button {
-            background: #7c3aed;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-    </style>
+h1 {
+    font-size: 38px;
+    text-align: center;
+}
+
+h1 span {
+    color: #a78bfa;
+}
+
+.description {
+    text-align: center;
+    color: #aaa;
+    line-height: 1.6;
+}
+
+.card {
+    background: #17172a;
+    padding: 25px;
+    border-radius: 18px;
+    margin-top: 35px;
+    border: 1px solid #30304a;
+}
+
+label {
+    display: block;
+    margin: 18px 0 10px;
+}
+
+input, select {
+    width: 100%;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid #454563;
+    background: #101020;
+    color: white;
+    font-size: 15px;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    margin-top: 25px;
+    background: linear-gradient(90deg,#7c3aed,#a855f7);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+button:active {
+    opacity: 0.8;
+}
+
+#result {
+    text-align: center;
+    color: #c4b5fd;
+    margin-top: 20px;
+    line-height: 1.6;
+}
+
+footer {
+    text-align: center;
+    color: #777;
+    padding: 30px;
+}
+</style>
 </head>
 
 <body>
 
+<header>⚡ ShortsAI</header>
+
 <div class="container">
-    <h1>🎬 AI Shorts Generator</h1>
 
-    <p>Turn long YouTube videos into Shorts automatically.</p>
+<h1>Turn Long Videos Into <span>Shorts</span></h1>
 
-    <input type="url" placeholder="Paste YouTube video URL">
+<p class="description">
+Paste your YouTube video link.
+Let AI discover the best moments.
+</p>
 
-    <br>
+<div class="card">
 
-    <button onclick="generate()">Generate Shorts 🚀</button>
+<label>YouTube Video URL</label>
 
-    <p id="result"></p>
+<input
+type="url"
+id="videoUrl"
+placeholder="https://www.youtube.com/watch?v=..."
+>
+
+<label>Number of Shorts</label>
+
+<select id="number">
+<option>3</option>
+<option>5</option>
+<option>10</option>
+</select>
+
+<label>Clip Duration</label>
+
+<select id="duration">
+<option value="30">30 seconds</option>
+<option value="45">45 seconds</option>
+<option value="60">60 seconds</option>
+</select>
+
+<button onclick="generate()">
+✨ Generate Shorts
+</button>
+
+<div id="result"></div>
+
 </div>
+</div>
+
+<footer>
+ShortsAI © 2026
+</footer>
 
 <script>
 function generate() {
-    document.getElementById("result").innerText =
-    "Your AI Shorts Generator is coming soon! 🚀";
+    const url = document.getElementById("videoUrl").value;
+    const result = document.getElementById("result");
+
+    if (!url.trim()) {
+        result.innerText = "Please enter a YouTube URL.";
+        return;
+    }
+
+    if (!/(youtube\.com\/|youtu\.be\/)/i.test(url)) {
+        result.innerText = "Please enter a valid YouTube link.";
+        return;
+    }
+
+    result.innerText =
+    "Your video link is ready! AI processing backend will be connected in the next phase.";
 }
 </script>
 
 </body>
-  </html>
+    </html>
