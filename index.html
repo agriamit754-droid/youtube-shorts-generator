@@ -7,95 +7,85 @@
 
 <style>
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    background: #090914;
-    color: white;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  background: #090914;
+  color: white;
+  font-family: Arial, sans-serif;
 }
 
 header {
-    padding: 22px;
-    border-bottom: 1px solid #292943;
-    font-size: 23px;
-    font-weight: bold;
-    color: #a78bfa;
+  padding: 22px;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+  color: #a78bfa;
+  border-bottom: 1px solid #292943;
 }
 
 .container {
-    max-width: 650px;
-    margin: 65px auto;
-    padding: 25px;
+  max-width: 600px;
+  margin: 55px auto;
+  padding: 25px;
 }
 
 h1 {
-    font-size: 38px;
-    text-align: center;
+  text-align: center;
 }
 
-h1 span {
-    color: #a78bfa;
-}
-
-.description {
-    text-align: center;
-    color: #aaa;
-    line-height: 1.6;
-}
-
-.card {
-    background: #17172a;
-    padding: 25px;
-    border-radius: 18px;
-    margin-top: 35px;
-    border: 1px solid #30304a;
+p {
+  color: #aaa;
+  text-align: center;
 }
 
 label {
-    display: block;
-    margin: 18px 0 10px;
+  display: block;
+  margin-top: 22px;
+  margin-bottom: 9px;
 }
 
 input, select {
-    width: 100%;
-    padding: 16px;
-    border-radius: 10px;
-    border: 1px solid #454563;
-    background: #101020;
-    color: white;
-    font-size: 15px;
+  width: 100%;
+  padding: 15px;
+  background: #17172a;
+  color: white;
+  border: 1px solid #444466;
+  border-radius: 9px;
+  font-size: 16px;
 }
 
 button {
-    width: 100%;
-    padding: 16px;
-    margin-top: 25px;
-    background: linear-gradient(90deg,#7c3aed,#a855f7);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 17px;
-    font-weight: bold;
+  width: 100%;
+  margin-top: 28px;
+  padding: 16px;
+  background: #8055ed;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
-button:active {
-    opacity: 0.8;
+button:disabled {
+  opacity: 0.6;
 }
 
 #result {
-    text-align: center;
-    color: #c4b5fd;
-    margin-top: 20px;
-    line-height: 1.6;
+  margin-top: 25px;
+  padding: 15px;
+  background: #17172a;
+  border-radius: 9px;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 
 footer {
-    text-align: center;
-    color: #777;
-    padding: 30px;
+  text-align: center;
+  color: #777;
+  padding: 25px;
 }
 </style>
 </head>
@@ -106,70 +96,120 @@ footer {
 
 <div class="container">
 
-<h1>Turn Long Videos Into <span>Shorts</span></h1>
+<h1>Create Amazing Shorts</h1>
 
-<p class="description">
-Paste your YouTube video link.
-Let AI discover the best moments.
-</p>
+<p>Turn your video ideas into YouTube Shorts.</p>
 
-<div class="card">
-
-<label>YouTube Video URL</label>
+<label for="videoURL">YouTube Video URL</label>
 
 <input
-type="url"
-id="videoUrl"
-placeholder="https://www.youtube.com/watch?v=..."
+  id="videoURL"
+  type="url"
+  placeholder="Paste your YouTube link here"
 >
 
-<label>Number of Shorts</label>
+<label for="count">Number of Shorts</label>
 
-<select id="number">
-<option>3</option>
-<option>5</option>
-<option>10</option>
+<select id="count">
+  <option value="3">3 Shorts</option>
+  <option value="5">5 Shorts</option>
+  <option value="10">10 Shorts</option>
 </select>
 
-<label>Clip Duration</label>
+<label for="duration">Clip Duration</label>
 
 <select id="duration">
-<option value="30">30 seconds</option>
-<option value="45">45 seconds</option>
-<option value="60">60 seconds</option>
+  <option value="30">30 Seconds</option>
+  <option value="45">45 Seconds</option>
+  <option value="60">60 Seconds</option>
 </select>
 
-<button onclick="generate()">
-✨ Generate Shorts
+<button id="generateBtn" onclick="generate()">
+  Generate Shorts 🚀
 </button>
 
-<div id="result"></div>
+<div id="result">
+  Your Shorts will appear here.
+</div>
 
 </div>
-</div>
 
-<footer>
-ShortsAI © 2026
-</footer>
+<footer>ShortsAI © 2026</footer>
 
 <script>
-function generate() {
-    const url = document.getElementById("videoUrl").value;
-    const result = document.getElementById("result");
 
-    if (!url.trim()) {
-        result.innerText = "Please enter a YouTube URL.";
-        return;
-    }
+const BACKEND_URL =
+"https://shortsai-backend.amit6018158.workers.dev";
 
-    if (!/(youtube\.com\/|youtu\.be\/)/i.test(url)) {
-        result.innerText = "Please enter a valid YouTube link.";
-        return;
+async function generate() {
+
+  const url = document.getElementById("videoURL").value.trim();
+
+  const count = document.getElementById("count").value;
+
+  const duration = document.getElementById("duration").value;
+
+  const result = document.getElementById("result");
+
+  const button = document.getElementById("generateBtn");
+
+  if (!url) {
+    result.innerText = "Please enter a YouTube URL.";
+    return;
+  }
+
+  if (!/(youtube\.com|youtu\.be)/i.test(url)) {
+    result.innerText = "Please enter a valid YouTube URL.";
+    return;
+  }
+
+  button.disabled = true;
+  button.innerText = "Connecting...";
+
+  result.innerText = "Connecting to ShortsAI backend...";
+
+  try {
+
+    const response = await fetch(BACKEND_URL, {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        videoUrl: url,
+        numberOfShorts: count,
+        duration: duration
+      })
+
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error("Backend request failed");
     }
 
     result.innerText =
-    "Your video link is ready! AI processing backend will be connected in the next phase.";
+      "✅ " + data.message +
+      "\n\nBackend connection successful!";
+
+  } catch (error) {
+
+    result.innerText =
+      "❌ Connection failed. Please try again.";
+
+    console.error(error);
+
+  }
+
+  button.disabled = false;
+  button.innerText = "Generate Shorts 🚀";
+
 }
+
 </script>
 
 </body>
