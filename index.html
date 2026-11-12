@@ -3,214 +3,249 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShortsAI - Video Generator</title>
+
+<title>ShortsAI - AI Video Clipper</title>
 
 <style>
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  background: #090914;
+  background: #090d18;
   color: white;
   font-family: Arial, sans-serif;
-}
-
-header {
-  padding: 22px;
-  text-align: center;
-  font-size: 25px;
-  font-weight: bold;
-  color: #a78bfa;
-  border-bottom: 1px solid #292943;
+  padding: 20px;
 }
 
 .container {
-  max-width: 600px;
-  margin: 55px auto;
+  max-width: 650px;
+  margin: 40px auto;
+  background: #151c2e;
   padding: 25px;
+  border-radius: 20px;
 }
 
 h1 {
   text-align: center;
+  font-size: 34px;
+  margin-bottom: 10px;
 }
 
-p {
-  color: #aaa;
+h1 span {
+  color: #8b5cf6;
+}
+
+.subtitle {
   text-align: center;
+  color: #aab2c5;
+  margin-bottom: 30px;
+}
+
+.upload-box {
+  border: 2px dashed #8b5cf6;
+  padding: 35px 15px;
+  text-align: center;
+  border-radius: 15px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.upload-box:hover {
+  background: #202944;
+}
+
+.upload-box p {
+  margin: 10px;
+  color: #c4c9d8;
+}
+
+.upload-icon {
+  font-size: 45px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+video {
+  width: 100%;
+  border-radius: 12px;
+  margin: 15px 0;
+  display: none;
+  background: black;
 }
 
 label {
   display: block;
-  margin-top: 22px;
-  margin-bottom: 9px;
+  margin: 20px 0 8px;
+  color: #cbd5e1;
 }
 
-input, select {
+select {
   width: 100%;
-  padding: 15px;
-  background: #17172a;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #263149;
   color: white;
-  border: 1px solid #444466;
-  border-radius: 9px;
   font-size: 16px;
 }
 
 button {
   width: 100%;
-  margin-top: 28px;
   padding: 16px;
-  background: #8055ed;
+  margin-top: 25px;
+  background: linear-gradient(90deg, #7c3aed, #2563eb);
   color: white;
-  border: none;
-  border-radius: 9px;
   font-size: 18px;
   font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
 }
 
 button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 #result {
-  margin-top: 25px;
-  padding: 15px;
-  background: #17172a;
-  border-radius: 9px;
+  margin-top: 20px;
   text-align: center;
-  overflow-wrap: anywhere;
+  color: #c4b5fd;
+  line-height: 1.6;
+  white-space: pre-wrap;
 }
 
-footer {
+.footer {
   text-align: center;
-  color: #777;
-  padding: 25px;
+  color: #64748b;
+  margin-top: 25px;
+  font-size: 13px;
 }
 </style>
 </head>
 
 <body>
 
-<header>⚡ ShortsAI</header>
-
 <div class="container">
 
-<h1>Create Amazing Shorts</h1>
+<h1>Shorts<span>AI</span> 🚀</h1>
 
-<p>Turn your video ideas into YouTube Shorts.</p>
+<p class="subtitle">
+Turn long videos into interesting Shorts.
+</p>
 
-<label for="videoURL">YouTube Video URL</label>
+<label class="upload-box" for="videoFile">
+
+<div class="upload-icon">📁</div>
+
+<h3>Upload Your Video</h3>
+
+<p>Tap here to select a video from your phone.</p>
+
+<p>MP4, MOV, WebM</p>
+
+</label>
 
 <input
-  id="videoURL"
-  type="url"
-  placeholder="Paste your YouTube link here"
+type="file"
+id="videoFile"
+accept="video/mp4,video/quicktime,video/webm"
 >
 
-<label for="count">Number of Shorts</label>
+<video id="preview" controls></video>
+
+<p id="fileInfo"></p>
+
+<label>Number of Shorts</label>
 
 <select id="count">
-  <option value="3">3 Shorts</option>
-  <option value="5">5 Shorts</option>
-  <option value="10">10 Shorts</option>
+<option value="3">3 Shorts</option>
+<option value="5">5 Shorts</option>
+<option value="10">10 Shorts</option>
 </select>
 
-<label for="duration">Clip Duration</label>
+<label>Clip Duration</label>
 
 <select id="duration">
-  <option value="30">30 Seconds</option>
-  <option value="45">45 Seconds</option>
-  <option value="60">60 Seconds</option>
+<option value="30">30 Seconds</option>
+<option value="45">45 Seconds</option>
+<option value="60">60 Seconds</option>
 </select>
 
-<button id="generateBtn" onclick="generate()">
-  Generate Shorts 🚀
+<button id="generateBtn" disabled onclick="generate()">
+Generate Shorts 🚀
 </button>
 
 <div id="result">
-  Your Shorts will appear here.
+Upload a video to get started.
+</div>
+
+<div class="footer">
+Powered by ShortsAI
 </div>
 
 </div>
-
-<footer>ShortsAI © 2026</footer>
 
 <script>
 
-const BACKEND_URL =
-"https://shortsai-backend.amit6018158.workers.dev";
+const videoFile = document.getElementById("videoFile");
+const preview = document.getElementById("preview");
+const fileInfo = document.getElementById("fileInfo");
+const result = document.getElementById("result");
+const button = document.getElementById("generateBtn");
+
+let selectedVideo = null;
+
+videoFile.addEventListener("change", function() {
+
+  const file = this.files[0];
+
+  if (!file) return;
+
+  if (!file.type.startsWith("video/")) {
+    result.innerText = "Please select a valid video.";
+    return;
+  }
+
+  selectedVideo = file;
+
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+
+  fileInfo.innerText =
+    "Selected: " + file.name +
+    "\nSize: " + (file.size / (1024 * 1024)).toFixed(2) + " MB";
+
+  result.innerText = "✅ Video selected successfully!";
+
+  button.disabled = false;
+
+});
 
 async function generate() {
 
-  const url = document.getElementById("videoURL").value.trim();
-
-  const count = document.getElementById("count").value;
-
-  const duration = document.getElementById("duration").value;
-
-  const result = document.getElementById("result");
-
-  const button = document.getElementById("generateBtn");
-
-  if (!url) {
-    result.innerText = "Please enter a YouTube URL.";
+  if (!selectedVideo) {
+    result.innerText = "Please upload a video first.";
     return;
   }
 
-  if (!/(youtube\.com|youtu\.be)/i.test(url)) {
-    result.innerText = "Please enter a valid YouTube URL.";
-    return;
-  }
-
-  button.disabled = true;
-  button.innerText = "Connecting...";
-
-  result.innerText = "Connecting to ShortsAI backend...";
-
-  try {
-
-    const response = await fetch(BACKEND_URL, {
-
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify({
-        videoUrl: url,
-        numberOfShorts: count,
-        duration: duration
-      })
-
-    });
-
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error("Backend request failed");
-    }
-
-    result.innerText =
-      "✅ " + data.message +
-      "\n\nBackend connection successful!";
-
-  } catch (error) {
-
-    result.innerText =
-      "❌ Connection failed. Please try again.";
-
-    console.error(error);
-
-  }
-
-  button.disabled = false;
-  button.innerText = "Generate Shorts 🚀";
+  result.innerText =
+    "✅ Your video is ready for processing.\n\n" +
+    "Selected Shorts: " +
+    document.getElementById("count").value +
+    "\nDuration: " +
+    document.getElementById("duration").value +
+    " seconds.\n\n" +
+    "The AI processing backend is the next step.";
 
 }
 
 </script>
 
 </body>
-    </html>
+</html>
